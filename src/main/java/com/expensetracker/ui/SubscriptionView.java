@@ -108,9 +108,9 @@ public class SubscriptionView {
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
     }
 
-    private void loadCategories() {
+    public void loadCategories() {
         try {
-            var categories = categoryDao.findByUser(MainApp.CURRENT_USER_ID);
+            var categories = categoryDao.findByUser(Session.userId());
             categoryNames.clear();
             categories.forEach(c -> categoryNames.put(c.id(), c.name()));
             categoryBox.getItems().setAll(categories);
@@ -121,7 +121,7 @@ public class SubscriptionView {
 
     public void refreshTable() {
         try {
-            table.getItems().setAll(subscriptionDao.findByUser(MainApp.CURRENT_USER_ID));
+            table.getItems().setAll(subscriptionDao.findByUser(Session.userId()));
         } catch (SQLException e) {
             messageLabel.setText("Could not load subscriptions: " + e.getMessage());
         }
@@ -140,7 +140,7 @@ public class SubscriptionView {
             BigDecimal amount = new BigDecimal(amountField.getText().trim());
             if (amount.signum() <= 0) { messageLabel.setText("Amount must be greater than 0"); return; }
 
-            subscriptionDao.add(new Subscription(0, MainApp.CURRENT_USER_ID, category.id(),
+            subscriptionDao.add(new Subscription(0, Session.userId(), category.id(),
                     name, amount, frequencyBox.getValue(), due, true));
             nameField.clear();
             amountField.clear();
@@ -154,7 +154,7 @@ public class SubscriptionView {
 
     private void onProcess() {
         try {
-            List<Expense> created = subscriptionService.processDue(MainApp.CURRENT_USER_ID, LocalDate.now());
+            List<Expense> created = subscriptionService.processDue(Session.userId(), LocalDate.now());
             refreshTable();
             messageLabel.setText(created.isEmpty()
                     ? "Nothing is due right now"
@@ -171,7 +171,7 @@ public class SubscriptionView {
             return;
         }
         try {
-            subscriptionDao.delete(selected.id(), MainApp.CURRENT_USER_ID);
+            subscriptionDao.delete(selected.id(), Session.userId());
             refreshTable();
             messageLabel.setText("Deleted " + selected.name());
         } catch (SQLException e) {

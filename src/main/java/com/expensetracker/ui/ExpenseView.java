@@ -97,9 +97,9 @@ public class ExpenseView {
         table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
     }
 
-    private void loadCategories() {
+    public void loadCategories() {
         try {
-            var categories = categoryDao.findByUser(MainApp.CURRENT_USER_ID);
+            var categories = categoryDao.findByUser(Session.userId());
             categoryNames.clear();
             categories.forEach(c -> categoryNames.put(c.id(), c.name()));
             categoryBox.getItems().setAll(categories);
@@ -110,7 +110,7 @@ public class ExpenseView {
 
     public void refreshTable() {
         try {
-            table.getItems().setAll(expenseDao.findByUser(MainApp.CURRENT_USER_ID));
+            table.getItems().setAll(expenseDao.findByUser(Session.userId()));
         } catch (SQLException e) {
             messageLabel.setText("Could not load expenses: " + e.getMessage());
         }
@@ -127,7 +127,7 @@ public class ExpenseView {
             BigDecimal amount = new BigDecimal(amountField.getText().trim());
 
             AddExpenseResult result = expenseService.addExpense(new Expense(
-                    0, MainApp.CURRENT_USER_ID, category.id(), amount,
+                    0, Session.userId(), category.id(), amount,
                     descField.getText().trim(), datePicker.getValue()));
 
             amountField.clear();

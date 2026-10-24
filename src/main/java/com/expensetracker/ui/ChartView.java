@@ -75,7 +75,7 @@ public class ChartView {
 
         try {
             Map<String, BigDecimal> totals = expenseDao.totalsByCategory(
-                    MainApp.CURRENT_USER_ID, month.atDay(1), month.atEndOfMonth());
+                    Session.userId(), month.atDay(1), month.atEndOfMonth());
             BigDecimal grand = totals.values().stream().reduce(BigDecimal.ZERO, BigDecimal::add);
             totalLabel.setText(totals.isEmpty() ? "No expenses this month"
                                                 : "Total spent: " + grand.toPlainString());
@@ -109,13 +109,13 @@ public class ChartView {
     private void showDetails(String categoryName) {
         try {
             Map<Integer, String> names = new HashMap<>();
-            categoryDao.findByUser(MainApp.CURRENT_USER_ID).forEach(c -> names.put(c.id(), c.name()));
+            categoryDao.findByUser(Session.userId()).forEach(c -> names.put(c.id(), c.name()));
             LocalDate from = month.atDay(1);
             LocalDate to = month.atEndOfMonth();
 
             detailsTitle.setText(categoryName + " expenses in " + monthLabel.getText());
             detailsList.getItems().setAll(
-                    expenseDao.findByUser(MainApp.CURRENT_USER_ID).stream()
+                    expenseDao.findByUser(Session.userId()).stream()
                             .filter(x -> categoryName.equals(names.get(x.categoryId())))
                             .filter(x -> !x.expenseDate().isBefore(from) && !x.expenseDate().isAfter(to))
                             .map(x -> String.format("%s   %s   %s", x.expenseDate(),

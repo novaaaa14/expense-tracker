@@ -41,4 +41,14 @@ public class CategoryDao {
         }
         return result;
     }
+
+    public boolean delete(int id, int userId) throws SQLException {
+        String sql = "DELETE FROM categories WHERE id = ? AND user_id = ?";
+        try (Connection conn = DatabaseConfig.getConnection();
+            PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            ps.setInt(2, userId);
+            return ps.executeUpdate() > 0;
+        }
+    }
 }

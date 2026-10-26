@@ -26,6 +26,7 @@ public class MainApp extends Application {
     @Override
     public void start(Stage stage) {
         scene = new Scene(new Region(), 1000, 650);
+        scene.getStylesheets().add(getClass().getResource("/css/style.css").toExternalForm());
         stage.setTitle("Expense Tracker");
         stage.setScene(scene);
         showLogin();
@@ -93,6 +94,7 @@ public class MainApp extends Application {
         HBox topBar = new HBox(10, who, spacer, logout);
         topBar.setAlignment(Pos.CENTER_LEFT);
         topBar.setPadding(new Insets(8, 16, 8, 16));
+        topBar.getStyleClass().add("top-bar");
 
         BorderPane layout = new BorderPane();
         layout.setTop(topBar);

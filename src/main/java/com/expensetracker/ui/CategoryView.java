@@ -25,12 +25,13 @@ public class CategoryView {
 
     public CategoryView() {
         Label title = new Label("Categories");
-        title.setStyle("-fx-font-size: 22px; -fx-font-weight: bold;");
+        title.getStyleClass().add("page-title");
 
         nameField.setPromptText("New category name");
         HBox.setHgrow(nameField, Priority.ALWAYS);
         Button addButton = new Button("Add category");
         addButton.setOnAction(e -> onAdd());
+        addButton.getStyleClass().add("primary");
         HBox form = new HBox(10, nameField, addButton);
 
         Button deleteButton = new Button("Delete selected");

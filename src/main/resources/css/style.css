@@ -1,0 +1,186 @@
+/* ===== Palette: change colors here and the whole app updates ===== */
+.root {
+    -bg: #f5f6fb;
+    -surface: #ffffff;
+    -primary: #5b5bd6;
+    -primary-dark: #4747b8;
+    -primary-soft: #ecebff;
+    -ink: #1f2430;
+    -muted: #6b7280;
+    -border: #e2e5ee;
+    -ok: #2e9e6b;
+    -warn: #e8890c;
+    -over: #d64545;
+
+    /* pie chart slice and legend colors, in slice order */
+    CHART_COLOR_1: #5b5bd6;
+    CHART_COLOR_2: #2bb3a3;
+    CHART_COLOR_3: #f0a73a;
+    CHART_COLOR_4: #e0567a;
+    CHART_COLOR_5: #4ba3e3;
+    CHART_COLOR_6: #9b6bdc;
+    CHART_COLOR_7: #8bc34a;
+    CHART_COLOR_8: #8a90a0;
+
+    -fx-font-family: "System";
+    -fx-font-size: 14px;
+    -fx-background-color: -bg;
+    -fx-accent: -primary;
+    -fx-focus-color: -primary;
+    -fx-faint-focus-color: transparent;
+    -fx-control-inner-background: -surface;
+    -fx-selection-bar: -primary-soft;
+    -fx-selection-bar-non-focused: -primary-soft;
+    -fx-selection-bar-text: -ink;
+}
+
+/* ===== Text ===== */
+.label { -fx-text-fill: -ink; }
+.muted { -fx-text-fill: -muted; }
+.page-title { -fx-font-size: 24px; -fx-font-weight: bold; }
+.login-title { -fx-font-size: 28px; -fx-font-weight: bold; }
+.month-label { -fx-font-size: 16px; -fx-font-weight: bold; }
+.error-text { -fx-text-fill: -over; }
+.hyperlink { -fx-text-fill: -primary; }
+
+/* ===== Cards ===== */
+.card {
+    -fx-background-color: -surface;
+    -fx-background-radius: 14;
+    -fx-border-color: -border;
+    -fx-border-radius: 14;
+    -fx-padding: 28;
+    -fx-effect: dropshadow(gaussian, rgba(30, 36, 48, 0.08), 24, 0, 0, 6);
+}
+.row-card {
+    -fx-background-color: -surface;
+    -fx-background-radius: 10;
+    -fx-border-color: -border;
+    -fx-border-radius: 10;
+    -fx-padding: 14 16 14 16;
+}
+
+/* ===== Top bar ===== */
+.top-bar {
+    -fx-background-color: -surface;
+    -fx-border-color: transparent transparent -border transparent;
+}
+.top-bar .label { -fx-text-fill: -muted; }
+
+/* ===== Tabs ===== */
+.tab-pane > .tab-header-area > .tab-header-background {
+    -fx-background-color: -surface;
+    -fx-effect: none;
+}
+.tab-pane > .tab-content-area { -fx-background-color: -bg; }
+.tab {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0;
+    -fx-background-radius: 0;
+    -fx-padding: 8 16 8 16;
+}
+.tab .tab-label { -fx-text-fill: -muted; -fx-font-size: 14px; }
+.tab:selected {
+    -fx-border-color: transparent transparent -primary transparent;
+    -fx-border-width: 0 0 3 0;
+}
+.tab:selected .tab-label { -fx-text-fill: -primary; -fx-font-weight: bold; }
+.tab-pane:focused > .tab-header-area > .headers-region > .tab:selected .focus-indicator {
+    -fx-border-color: transparent;
+}
+
+/* ===== Buttons ===== */
+.button {
+    -fx-background-color: -surface;
+    -fx-background-insets: 0;
+    -fx-background-radius: 8;
+    -fx-border-color: -border;
+    -fx-border-radius: 8;
+    -fx-padding: 8 16 8 16;
+    -fx-text-fill: -ink;
+    -fx-cursor: hand;
+}
+.button:hover { -fx-background-color: -primary-soft; }
+.button.primary {
+    -fx-background-color: -primary;
+    -fx-border-color: transparent;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+.button.primary:hover { -fx-background-color: -primary-dark; }
+
+/* ===== Inputs ===== */
+.text-field, .password-field {
+    -fx-background-color: -surface;
+    -fx-background-insets: 0;
+    -fx-background-radius: 8;
+    -fx-border-color: -border;
+    -fx-border-radius: 8;
+    -fx-padding: 8 10 8 10;
+}
+.text-field:focused, .password-field:focused { -fx-border-color: -primary; }
+
+.combo-box-base, .date-picker {
+    -fx-background-color: -surface;
+    -fx-background-insets: 0;
+    -fx-background-radius: 8;
+    -fx-border-color: -border;
+    -fx-border-radius: 8;
+}
+.combo-box-base .text-field, .date-picker .text-field {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+}
+.combo-box-base .arrow-button, .date-picker .arrow-button { -fx-background-color: transparent; }
+
+/* ===== Tables and lists ===== */
+.table-view, .list-view {
+    -fx-background-color: -surface;
+    -fx-background-radius: 10;
+    -fx-border-color: -border;
+    -fx-border-radius: 10;
+}
+.table-view .column-header-background { -fx-background-color: -surface; }
+.table-view .column-header, .table-view .filler {
+    -fx-background-color: -surface;
+    -fx-border-color: transparent transparent -border transparent;
+    -fx-size: 40;
+}
+.table-view .column-header .label { -fx-text-fill: -muted; -fx-font-weight: bold; }
+.table-row-cell, .table-row-cell:odd {
+    -fx-background-color: -surface;
+    -fx-border-color: transparent transparent #f0f1f6 transparent;
+    -fx-cell-size: 40;
+}
+.table-row-cell:filled:selected { -fx-background-color: -primary-soft; }
+.table-cell { -fx-padding: 0 10 0 10; -fx-alignment: CENTER-LEFT; -fx-text-fill: -ink; }
+.list-cell { -fx-padding: 10 12 10 12; }
+.list-cell:filled:selected { -fx-background-color: -primary-soft; -fx-text-fill: -ink; }
+
+.scroll-pane { -fx-background-color: transparent; -fx-background: transparent; }
+.scroll-pane > .viewport { -fx-background-color: transparent; }
+
+/* ===== Budget progress bars ===== */
+.progress-bar > .track {
+    -fx-background-color: #e9ebf3;
+    -fx-background-insets: 0;
+    -fx-background-radius: 6;
+}
+.progress-bar > .bar {
+    -fx-background-color: -fx-accent;
+    -fx-background-insets: 0;
+    -fx-background-radius: 6;
+    -fx-padding: 6;
+}
+.progress-bar.bar-ok { -fx-accent: -ok; }
+.progress-bar.bar-warn { -fx-accent: -warn; }
+.progress-bar.bar-over { -fx-accent: -over; }
+
+/* ===== Pie chart ===== */
+.chart-pie {
+    -fx-background-color: -fx-pie-color;
+    -fx-background-insets: 0;
+    -fx-border-color: -surface;
+    -fx-border-width: 2;
+}
+.chart-legend { -fx-background-color: transparent; -fx-border-color: transparent; }

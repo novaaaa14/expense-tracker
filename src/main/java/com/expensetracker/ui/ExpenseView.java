@@ -68,11 +68,12 @@ public class ExpenseView {
 
         Button addButton = new Button("Add expense");
         addButton.setOnAction(e -> onAdd());
+        addButton.getStyleClass().add("primary");
 
         HBox form = new HBox(10, categoryBox, amountField, descField, datePicker, addButton);
 
         Label title = new Label("Expenses");
-        title.setStyle("-fx-font-size: 22px; -fx-font-weight: bold;");
+        title.getStyleClass().add("page-title");
 
         root.setPadding(new Insets(16));
         root.getChildren().addAll(title, form, messageLabel, table);

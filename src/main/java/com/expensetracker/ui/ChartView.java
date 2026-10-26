@@ -44,13 +44,13 @@ public class ChartView {
 
     public ChartView() {
         Label title = new Label("Spending by category");
-        title.setStyle("-fx-font-size: 22px; -fx-font-weight: bold;");
+        title.getStyleClass().add("page-title");
 
         Button prev = new Button("◀");
         Button next = new Button("▶");
         prev.setOnAction(e -> { month = month.minusMonths(1); refresh(); });
         next.setOnAction(e -> { month = month.plusMonths(1); refresh(); });
-        monthLabel.setStyle("-fx-font-size: 16px; -fx-font-weight: bold;");
+        monthLabel.getStyleClass().add("month-label");        
         HBox nav = new HBox(10, prev, monthLabel, next);
         nav.setAlignment(Pos.CENTER_LEFT);
 

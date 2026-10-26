@@ -62,12 +62,13 @@ public class BudgetView {
 
         Button saveButton = new Button("Save budget");
         saveButton.setOnAction(e -> onSave());
+        saveButton.getStyleClass().add("primary");
         HBox form = new HBox(10, categoryBox, limitField, new Label("Alert at"), thresholdField,
                 new Label("%"), saveButton);
         form.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
 
         Label title = new Label("Budgets (this month)");
-        title.setStyle("-fx-font-size: 22px; -fx-font-weight: bold;");
+        title.getStyleClass().add("page-title");
 
         ScrollPane scroll = new ScrollPane(rowsBox);
         scroll.setFitToWidth(true);
@@ -108,23 +109,26 @@ public class BudgetView {
 
     private VBox buildRow(Budget b, BigDecimal spent) {
         int percent = spent.multiply(BigDecimal.valueOf(100))
-                           .divide(b.monthlyLimit(), 0, RoundingMode.DOWN)
-                           .intValue();
-        String color = spent.compareTo(b.monthlyLimit()) >= 0 ? "#e74c3c"          // exceeded
-                     : percent >= b.alertThresholdPercent() ? "#f39c12"             // past threshold
-                     : "#27ae60";                                                   // fine
+                        .divide(b.monthlyLimit(), 0, RoundingMode.DOWN)
+                        .intValue();
+        String barClass = spent.compareTo(b.monthlyLimit()) >= 0 ? "bar-over"
+                        : percent >= b.alertThresholdPercent() ? "bar-warn"
+                        : "bar-ok";
 
         Label name = new Label(categoryNames.getOrDefault(b.categoryId(), "?"));
         name.setStyle("-fx-font-weight: bold;");
         Label amounts = new Label(String.format("%s / %s  (%d%%, alert at %d%%)",
                 spent.toPlainString(), b.monthlyLimit().toPlainString(),
                 percent, b.alertThresholdPercent()));
+        amounts.getStyleClass().add("muted");
 
         ProgressBar bar = new ProgressBar(Math.min(1.0, spent.doubleValue() / b.monthlyLimit().doubleValue()));
         bar.setMaxWidth(Double.MAX_VALUE);
-        bar.setStyle("-fx-accent: " + color + ";");
+        bar.getStyleClass().add(barClass);
 
-        return new VBox(4, new HBox(10, name, amounts), bar);
+        VBox row = new VBox(6, new HBox(10, name, amounts), bar);
+        row.getStyleClass().add("row-card");
+        return row;
     }
 
     private void onSave() {

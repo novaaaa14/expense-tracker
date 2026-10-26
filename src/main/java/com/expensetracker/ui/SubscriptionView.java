@@ -71,6 +71,7 @@ public class SubscriptionView {
 
         Button addButton = new Button("Add subscription");
         addButton.setOnAction(e -> onAdd());
+        addButton.getStyleClass().add("primary");
         HBox form = new HBox(10, nameField, amountField, categoryBox, frequencyBox, dueDatePicker, addButton);
 
         Button processButton = new Button("Process due payments");
@@ -80,7 +81,7 @@ public class SubscriptionView {
         HBox actions = new HBox(10, processButton, deleteButton);
 
         Label title = new Label("Subscriptions");
-        title.setStyle("-fx-font-size: 22px; -fx-font-weight: bold;");
+        title.getStyleClass().add("page-title");
 
         root.setPadding(new Insets(16));
         root.getChildren().addAll(title, form, actions, messageLabel, table);

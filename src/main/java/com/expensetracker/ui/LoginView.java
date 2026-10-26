@@ -35,13 +35,13 @@ public class LoginView {
     public LoginView(Consumer<User> onSuccess) {
         this.onSuccess = onSuccess;
 
-        titleLabel.setStyle("-fx-font-size: 26px; -fx-font-weight: bold;");
+        titleLabel.getStyleClass().add("login-title");        
         nameField.setPromptText("Name");
         emailField.setPromptText("Email");
         passwordField.setPromptText("Password");
-        messageLabel.setStyle("-fx-text-fill: #c0392b;");
+        messageLabel.getStyleClass().add("error-text");
         messageLabel.setWrapText(true);
-        submitButton.setMaxWidth(Double.MAX_VALUE);
+        submitButton.getStyleClass().add("primary");
 
         submitButton.setOnAction(e -> submit());
         passwordField.setOnAction(e -> submit());      // Enter key submits
@@ -49,7 +49,7 @@ public class LoginView {
 
         VBox form = new VBox(12, titleLabel, nameField, emailField, passwordField,
                 submitButton, messageLabel, toggleLink);
-        form.setMaxWidth(340);
+        form.getStyleClass().add("card");
 
         root.setAlignment(Pos.CENTER);
         root.setPadding(new Insets(24));

@@ -11,8 +11,14 @@ import com.expensetracker.model.User;
 import com.expensetracker.util.PasswordHasher;
 
 public class AuthService {
-    private static final List<String> DEFAULT_CATEGORIES =
-            List.of("Food", "Transport", "Entertainment", "Bills");
+    private record DefaultCategory(String name, String color, String icon) {}
+
+    // Palette colours: pink, teal, yellow, lavender. Icons are keys the app maps to drawables.
+    private static final List<DefaultCategory> DEFAULT_CATEGORIES = List.of(
+            new DefaultCategory("Food", "#FFAEC9", "food"),
+            new DefaultCategory("Transport", "#6BE0D2", "transit"),
+            new DefaultCategory("Entertainment", "#FDF982", "game"),
+            new DefaultCategory("Bills", "#C8B6FF", "bolt"));
 
     private final UserDao userDao = new UserDao();
     private final CategoryDao categoryDao = new CategoryDao();
@@ -41,8 +47,8 @@ public class AuthService {
             throw e;
         }
 
-        for (String category : DEFAULT_CATEGORIES) {
-            categoryDao.add(new Category(0, user.id(), category));
+        for (DefaultCategory d : DEFAULT_CATEGORIES) {
+            categoryDao.add(new Category(0, user.id(), d.name(), d.color(), d.icon(), true));
         }
         return user;
     }
@@ -51,5 +57,10 @@ public class AuthService {
         return userDao.findByEmail(email.trim().toLowerCase())
                 .filter(stored -> PasswordHasher.verify(password, stored.passwordHash()))
                 .map(UserDao.StoredUser::user);
+    }
+
+    // For the JWT "who am I" check
+    public Optional<User> findUser(int id) throws SQLException {
+        return userDao.findById(id);
     }
 }

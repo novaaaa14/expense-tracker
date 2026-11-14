@@ -7,19 +7,24 @@ CREATE TABLE users (
 );
 
 CREATE TABLE categories (
-    id      SERIAL PRIMARY KEY,
-    user_id INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    name    VARCHAR(50) NOT NULL,
+    id         SERIAL PRIMARY KEY,
+    user_id    INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    name       VARCHAR(50) NOT NULL,
+    color      VARCHAR(7)  NOT NULL DEFAULT '#FFAEC9',
+    icon       VARCHAR(30) NOT NULL DEFAULT 'tag',
+    is_default BOOLEAN     NOT NULL DEFAULT FALSE,
     UNIQUE (user_id, name)
 );
 
+-- category_id is nullable: deleting a category unlinks its expenses
 CREATE TABLE expenses (
     id           SERIAL PRIMARY KEY,
     user_id      INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    category_id  INT NOT NULL REFERENCES categories(id),
+    category_id  INT REFERENCES categories(id) ON DELETE SET NULL,
     amount       NUMERIC(10,2) NOT NULL CHECK (amount > 0),
     description  VARCHAR(255),
     expense_date DATE NOT NULL DEFAULT CURRENT_DATE,
+    note         VARCHAR(255),
     created_at   TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -38,7 +43,7 @@ CREATE TABLE budgets (
 CREATE TABLE subscriptions (
     id            SERIAL PRIMARY KEY,
     user_id       INT NOT NULL REFERENCES users(id) ON DELETE CASCADE,
-    category_id   INT NOT NULL REFERENCES categories(id),
+    category_id   INT REFERENCES categories(id) ON DELETE SET NULL,
     name          VARCHAR(100) NOT NULL,
     amount        NUMERIC(10,2) NOT NULL CHECK (amount > 0),
     frequency     VARCHAR(10) NOT NULL CHECK (frequency IN ('WEEKLY','MONTHLY','YEARLY')),
@@ -47,3 +52,4 @@ CREATE TABLE subscriptions (
 );
 
 CREATE INDEX idx_expenses_user_date ON expenses(user_id, expense_date);
+CREATE INDEX idx_expenses_user_category ON expenses(user_id, category_id);

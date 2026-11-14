@@ -5,6 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 import com.expensetracker.config.DatabaseConfig;
@@ -42,5 +44,31 @@ public class UserDao {
                 return Optional.of(new StoredUser(user, rs.getString("password_hash")));
             }
         }
+    }
+
+    public Optional<User> findById(int id) throws SQLException {
+        String sql = "SELECT id, name, email FROM users WHERE id = ?";
+        try (Connection conn = DatabaseConfig.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next()
+                        ? Optional.of(new User(rs.getInt("id"), rs.getString("name"), rs.getString("email")))
+                        : Optional.empty();
+            }
+        }
+    }
+
+    // Used by the scheduled subscription job
+    public List<Integer> findAllIds() throws SQLException {
+        List<Integer> ids = new ArrayList<>();
+        try (Connection conn = DatabaseConfig.getConnection();
+             PreparedStatement ps = conn.prepareStatement("SELECT id FROM users ORDER BY id");
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                ids.add(rs.getInt("id"));
+            }
+        }
+        return ids;
     }
 }

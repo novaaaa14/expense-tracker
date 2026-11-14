@@ -1,10 +1,12 @@
 package com.expensetracker.dao;
 
+import java.sql.Array;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Types;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +23,7 @@ public class SubscriptionDao {
         try (Connection conn = DatabaseConfig.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setInt(1, s.userId());
-            ps.setInt(2, s.categoryId());
+            ps.setObject(2, s.categoryId(), Types.INTEGER);
             ps.setString(3, s.name());
             ps.setBigDecimal(4, s.amount());
             ps.setString(5, s.frequency().name());
@@ -66,6 +68,21 @@ public class SubscriptionDao {
         }
     }
 
+    // Bulk delete (multi-select). Returns how many rows were removed.
+    public int deleteMany(List<Integer> ids, int userId) throws SQLException {
+        if (ids.isEmpty()) {
+            return 0;
+        }
+        String sql = "DELETE FROM subscriptions WHERE user_id = ? AND id = ANY (?)";
+        try (Connection conn = DatabaseConfig.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            Array array = conn.createArrayOf("integer", ids.toArray());
+            ps.setInt(1, userId);
+            ps.setArray(2, array);
+            return ps.executeUpdate();
+        }
+    }
+
     // Shared SELECT used by findByUser and findDue
     private List<Subscription> query(String whereClause, int userId, LocalDate asOf) throws SQLException {
         String sql = "SELECT id, user_id, category_id, name, amount, frequency, next_due_date, active "
@@ -80,7 +97,8 @@ public class SubscriptionDao {
             try (ResultSet rs = ps.executeQuery()) {
                 while (rs.next()) {
                     result.add(new Subscription(
-                            rs.getInt("id"), rs.getInt("user_id"), rs.getInt("category_id"),
+                            rs.getInt("id"), rs.getInt("user_id"),
+                            rs.getObject("category_id", Integer.class),
                             rs.getString("name"), rs.getBigDecimal("amount"),
                             Frequency.valueOf(rs.getString("frequency")),
                             rs.getObject("next_due_date", LocalDate.class),

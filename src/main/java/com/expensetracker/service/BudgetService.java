@@ -81,4 +81,13 @@ public class BudgetService {
         return new BudgetStatus(b.id(), c.id(), c.name(), c.color(), c.icon(), spent, limit, percent,
                 b.alertThresholdPercent(), limit.subtract(spent), status);
     }
+
+        // category id -> monthly limit (for the Categories screen's limit field)
+    public Map<Integer, BigDecimal> limitsByCategory(int userId) throws SQLException {
+        Map<Integer, BigDecimal> limits = new HashMap<>();
+        for (Budget b : budgetDao.findByUser(userId)) {
+            limits.put(b.categoryId(), b.monthlyLimit());
+        }
+        return limits;
+    }
 }

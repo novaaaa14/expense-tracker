@@ -252,4 +252,23 @@ public class ExpenseDao {
                 rs.getObject("expense_date", LocalDate.class),
                 rs.getString("note"));
     }
+
+        // Pet streak: the most recent distinct days that have at least one expense (up to and including asOf)
+    public List<LocalDate> recentExpenseDays(int userId, LocalDate asOf, int limit) throws SQLException {
+        String sql = "SELECT DISTINCT expense_date FROM expenses WHERE user_id = ? AND expense_date <= ? "
+                   + "ORDER BY expense_date DESC LIMIT ?";
+        List<LocalDate> days = new ArrayList<>();
+        try (Connection conn = DatabaseConfig.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setInt(1, userId);
+            ps.setObject(2, asOf);
+            ps.setInt(3, limit);
+            try (ResultSet rs = ps.executeQuery()) {
+                while (rs.next()) {
+                    days.add(rs.getObject("expense_date", LocalDate.class));
+                }
+            }
+        }
+        return days;
+    }
 }

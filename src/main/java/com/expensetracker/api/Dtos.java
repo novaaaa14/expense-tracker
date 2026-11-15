@@ -35,4 +35,5 @@ public final class Dtos {
     public record CountResponse(int count) {}
     public record DeletedResponse(int deleted) {}
     public record ProcessedResponse(int created) {}
+    public record UpdateProfileRequest(String name) {}
 }

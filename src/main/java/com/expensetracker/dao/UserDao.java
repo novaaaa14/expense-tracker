@@ -71,4 +71,17 @@ public class UserDao {
         }
         return ids;
     }
+        public Optional<User> updateName(int id, String name) throws SQLException {
+        String sql = "UPDATE users SET name = ? WHERE id = ? RETURNING id, name, email";
+        try (Connection conn = DatabaseConfig.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, name);
+            ps.setInt(2, id);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next()
+                        ? Optional.of(new User(rs.getInt("id"), rs.getString("name"), rs.getString("email")))
+                        : Optional.empty();
+            }
+        }
+    }
 }

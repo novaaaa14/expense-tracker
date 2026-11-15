@@ -63,4 +63,15 @@ public class AuthService {
     public Optional<User> findUser(int id) throws SQLException {
         return userDao.findById(id);
     }
+
+        public Optional<User> updateName(int id, String name) throws SQLException {
+        String cleanName = name.trim();
+        if (cleanName.isEmpty()) {
+            throw new IllegalArgumentException("Enter your name");
+        }
+        if (cleanName.length() > 100) {
+            throw new IllegalArgumentException("Name is too long (100 characters max)");
+        }
+        return userDao.updateName(id, cleanName);
+    }
 }

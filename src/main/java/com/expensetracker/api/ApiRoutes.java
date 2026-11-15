@@ -6,7 +6,22 @@ import java.time.YearMonth;
 import java.util.List;
 import java.util.Map;
 
-import com.expensetracker.api.Dtos.*;
+import com.expensetracker.api.Dtos.AuthResponse;
+import com.expensetracker.api.Dtos.BudgetRequest;
+import com.expensetracker.api.Dtos.CategoryBasic;
+import com.expensetracker.api.Dtos.CategoryItem;
+import com.expensetracker.api.Dtos.CategoryRequest;
+import com.expensetracker.api.Dtos.CountResponse;
+import com.expensetracker.api.Dtos.DayTotal;
+import com.expensetracker.api.Dtos.DeletedResponse;
+import com.expensetracker.api.Dtos.ExpenseRequest;
+import com.expensetracker.api.Dtos.ExpenseResponse;
+import com.expensetracker.api.Dtos.IdsRequest;
+import com.expensetracker.api.Dtos.LoginRequest;
+import com.expensetracker.api.Dtos.ProcessedResponse;
+import com.expensetracker.api.Dtos.RegisterRequest;
+import com.expensetracker.api.Dtos.SubscriptionRequest;
+import com.expensetracker.api.Dtos.UpdateProfileRequest;
 import com.expensetracker.model.AddExpenseResult;
 import com.expensetracker.model.Budget;
 import com.expensetracker.model.Category;
@@ -69,6 +84,13 @@ public final class ApiRoutes {
 
         router.get("/api/me", ctx -> ctx.json(200, auth.findUser(ctx.userId())
                 .orElseThrow(() -> new ApiException(401, "Account no longer exists"))));
+
+        router.put("/api/me", ctx -> {
+            UpdateProfileRequest req = ctx.body(UpdateProfileRequest.class);
+            User user = auth.updateName(ctx.userId(), nz(req.name()))
+                    .orElseThrow(() -> new ApiException(401, "Account no longer exists"));
+            ctx.json(200, user);
+        });
     }
 
     // ------------------------------------------------------------ expenses
